@@ -37,7 +37,7 @@ if(!E->control.ggrd_comp_smooth){
 	else if(rad > 0.98430 && indbl > .5 && indbl < 1.5) /*Modified by Debanjan Pal to include more than 2 tracers, apprenend according to ggrd file*/
  
 		indbl=0.0;
-  
+
 	else if(indbl > 1.5)
  
 	indbl=2.0;
@@ -68,6 +68,9 @@ if(!E->control.ggrd_comp_smooth){
 		indbl=0.0;
 
  here rad is radius and 0.98430 is 100 km {(1-0.98430)*6370=100km}
+
+  ## There are two file in lib named Ggrd_handling_depth_dependent.c and Ggrd_handling_single_layer.c, where thic chages are done.
+  
 
 # 2) Append Tracer_steup.c
 
