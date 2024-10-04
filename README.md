@@ -61,7 +61,10 @@ if(!E->control.ggrd_comp_smooth){
 
  The weak boundaries are introduced using this part:
 
- else if(rad > 0.98430 && indbl > .5 && indbl < 1.5) /*Modified by Debanjan Pal to include more than 2 tracers, apprenend according to ggrd file*/
+ else if(rad > 0.98430 && indbl > .5 && indbl < 1.5) 
+ 
+ /*Modified by Debanjan Pal to include more than 2 tracers, apprenend according to ggrd file*/
+ 
 		indbl=0.0;
 
  here rad is radius and 0.98430 is 100 km {(1-0.98430)*6370=100km}
