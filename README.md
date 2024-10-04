@@ -56,6 +56,7 @@ if(!E->control.ggrd_comp_smooth){
     }
   }
 #################################################
+
  Here in this example, 0 is ambient, 1 is weak boundary (0-100km) and 2 is Craton (0-300km)
 
  The weak boundaries are introduced using this part:
