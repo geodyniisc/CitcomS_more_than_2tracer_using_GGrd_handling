@@ -56,14 +56,14 @@ if(!E->control.ggrd_comp_smooth){
     }
   }
 #################################################
-# Here in this example, 0 is ambient, 1 is weak boundary (0-100km) and 2 is Craton (0-300km)
+ Here in this example, 0 is ambient, 1 is weak boundary (0-100km) and 2 is Craton (0-300km)
 
-### The weak boundaries are introduced using this part:
+ The weak boundaries are introduced using this part:
 
-# else if(rad > 0.98430 && indbl > .5 && indbl < 1.5) /*Modified by Debanjan Pal to include more than 2 tracers, apprenend according to ggrd file*/
+ else if(rad > 0.98430 && indbl > .5 && indbl < 1.5) /*Modified by Debanjan Pal to include more than 2 tracers, apprenend according to ggrd file*/
 		indbl=0.0;
 
-# here rad is radius and 0.98430 is 100 km {(1-0.98430)*6370=100km}
+ here rad is radius and 0.98430 is 100 km {(1-0.98430)*6370=100km}
 
 # 2) Append Tracer_steup.c
 
