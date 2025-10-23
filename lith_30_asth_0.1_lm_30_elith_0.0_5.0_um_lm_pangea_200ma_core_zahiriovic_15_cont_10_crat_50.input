@@ -1,0 +1,328 @@
+#CIG citcom version
+#
+
+# Flow driven by surface plates plus density model smean.
+
+# specify output files
+datadir="lith_30_asth_0.1_lm_30_elith_0.0_5.0_um_lm_pangea_200ma_core_zahiriovic_15_cont_10_crat_50"
+datafile="d"
+
+output_format=ascii-gz
+output_optional=comp_nd
+output_ll_max=63
+
+checkpointFrequency=200
+gzdir_vtkio=1
+gzdir_rnr=off
+
+# specify input files
+# Important: when file_vbcs is 1, make sure topvbc is also turned on.
+file_vbcs=0
+vel_bound_file="/localscratch/esddeb/BCs/bvel_205_65/bvel"
+
+ggrd_vtop_control=0
+
+#ggrd_vtop_dir="../../data/smean/velocity/"
+ggrd_vtop_dir="gplate_0"
+
+
+coor=2
+coor_file=""
+
+mat_control=0
+mat_file=""
+
+
+
+# first two layers
+ggrd_mat_control=1
+# #ggrd_mat_control=0
+# #ggrd_mat_file="mythist"
+# #ggrd_mat_file="/home/staff/esd/esdagh/weak0.1_keel10.grd"
+#
+# # read in time information
+grd.time_hist.nvtimes=75
+ggrd_time_hist_file="/localscratch/esddeb/Indian_plate_models/free_slip_models/Subduction_ridge_slabs_postion/time.dat"
+ggrd_mat_file="/localscratch/esddeb/Indian_plate_models/free_slip_models/Subduction_ridge_slabs_postion/"
+# #ggrd_mat_code_viscosities=1,1
+#
+
+
+# leave free to leave fixed
+#ggrd_time_hist_file=""
+
+
+# adjust rayleigh number by premultiplying factor from grid
+# in top two layers
+ggrd_rayleigh_control=0
+#ggrd_rayleigh_control=2
+#ggrd_rayleigh_file="../../data/tomography/smean_age2/rayleigh.2.grd"
+
+tracer=0
+tracer_file=""
+
+
+# processors, mesh grid information
+nproc_surf=12
+nprocx=2
+nprocy=2
+nprocz=1
+nodex=65
+nodey=65
+nodez=65
+mgunitx=4
+mgunity=4
+mgunitz=8
+levels=4
+
+r_grid_layers=3	
+rr=0.54622508,0.8964055,1.0 	#    starting and ending r coodinates
+nr=1,33,65		#    starting and ending node in r direction
+
+
+
+# the calculation region definition
+#radius_inner=0.55
+radius_inner=0.546225
+radius_outer=1.0
+
+
+# restart info
+restart=off
+post_p=0
+solution_cycles_init=3400
+zero_elapsed_time=1
+datadir_old="asth_0.1_buoyant_pangea_200ma_lm_30_core"
+datafile_old="d"
+
+
+# timestepping information
+minstep=0
+maxstep=1000000
+maxtotstep=100000
+storage_spacing=50
+cpu_limits_in_seconds=360000000
+
+# Initial conditions
+num_perturbations=0
+perturbmag=0.5
+perturbl=1
+perturbm=1
+perturblayer=5
+
+half_space_age=100
+mantle_temp=1.0
+
+tic_method=4
+
+ggrd_tinit=1
+#
+#
+# general scaling, if velocities are in [%] from PREM
+
+
+ggrd_tinit_scale=0.0005 # when del T= 2000k
+ggrd_scale_with_prem=0
+ggrd_tinit_override_tbc=1
+ggrd_tinit_offset=0
+ggrd_tinit_gfile="BCs_200ma/t"   #"BCs_with_plume_1250km_200km_1000km/t" 		################## same to our case1 profile but no core  #################
+ggrd_tinit_dfile="BCs_200ma/tdepth.dat"  #"BCs_with_plume_1250km_200km_1000km/tdepth.dat"
+
+self_gravitation=on
+
+# Boundary Conditions
+topvbc=2
+     topvbxval=0.0
+     topvbyval=0.0
+
+botvbc=0
+     botvbxval=0.0
+     botvbyval=0.0
+
+toptbc=1
+     toptbcval=0.0
+bottbc=1
+     bottbcval=1.0
+
+lith_age=0
+lith_age_file="ocean_sorted.dat"
+lith_age_time=0
+lith_age_depth=0.031400
+#mantle_temp=1.000000
+temperature_bound_adj=0
+depth_bound_adj=0.157000
+width_bound_adj=0.087270
+
+
+# miscellaneous information
+stokes_flow_only=off
+#inputdiffusivity=0.00100
+inputdiffusivity=1.0
+rayleigh=5.1e08				# del T =2000
+#rayleigh=3.4e08			# if delta_T is 1300 C
+Q0=100.0
+
+
+# required information
+Problem=convection
+Geometry=sphere
+Spacing=regular
+#Solver=cgrad
+Solver=multigrid
+node_assemble=1
+
+
+# Depth Information
+# for material above z_lith,    mat = 1;
+# for material above z_300, 	mat = 2;
+# for material above z_410,     mat = 3;
+# for material above z_lmantle, mat = 4;
+# for material below z_lmantle, mat = 5;
+#z_50=0.00078431
+#z_lith=0.015696			#100 km depth
+#_300=0.04708			#300 km depth, asthenosphere
+#_lmantle=0.105		#also depth of 670-phase change
+#_cmb=0.439			#depth of another phase change
+
+# Viscosity Information
+viscosity=system
+rheol=1
+#visc_smooth_method=3
+
+VISC_UPDATE=on
+num_mat=4
+
+#DEPV=on
+TDEPV=on
+
+
+viscE=0.0,6.5,6.5,6.5
+viscZ=0,0,0,0
+viscT=0.0,0.5,0.5,0.5
+	
+z_layer=0.015696,0.04708,0.105,0.439
+
+visc0=30,0.1,1,30
+
+
+SDEPV=off
+sdepv_expt=1,1,1,1
+sdepv_misfit=0.020
+
+low_visc_channel=off
+low_visc_wedge=off
+lv_min_radius=0.9764
+lv_max_radius=0.9921
+lv_channel_thickness=0.0047
+lv_reduction=0.5
+
+PDEPV=off
+pdepv_a=1e5,0,0,0
+pdepv_b=0,0,0,0
+pdepv_y=1e5,0,0,0
+pdepv_eff=on
+
+VMIN=on
+visc_min=1.0e-4
+VMAX=on
+visc_max=1.0e+4
+pseudo_free_surf=on
+# Tracer information
+tracer=on
+CDEPV=on
+cdepv_ff=1,50,50
+
+
+
+tracer_ic_method=0
+tracers_per_element=10
+tracer_file=""
+
+tracer_flavors=3
+ic_method_for_flavors=1
+z_interface=0.700 ####depth 2550Km   does not matter
+
+ictracer_grd_layers=2
+ictracer_grd_file="cont_crat_1_2.grd" 
+
+
+regular_grid_deltheta=1.0
+regular_grid_delphi=1.0
+
+
+chemical_buoyancy=off
+#ibuoy_type=1
+buoy_type=1
+buoyancy_ratio=0
+reset_initial_composition=off
+
+# Phase Change Information
+
+Ra_410=0.0   #4.25e08 ## 4%
+clapeyron410=0.0242 ## 2.5MPa/k
+transT410=0.78
+width410=0.0058
+
+Ra_670=0.0       #6.8e08 ## 8%
+clapeyron670=-0.0194 ## -2Mpa/K
+transT670=0.875
+width670=0.0058
+
+
+Ra_cmb=0.0
+clapeyroncmb=-0.0235
+transTcmb=0.875
+widthcmb=0.0058
+
+
+# Dimensional Information
+radius=6370e+3
+density=3300
+thermdiff=1.0e-6
+gravacc=9.8
+thermexp=3.0e-5
+refvisc=1e+21 #  mantle reference viscosity
+cp=1250
+density_above=0
+#density_below=6600.0
+density_below=11601.01
+
+# Data input and program debugging
+DESCRIBE=off
+BEGINNER=off
+VERBOSE=off
+
+# verbose=on
+see_convergence=1
+
+
+# Solver Related Matters
+mg_cycle=1
+down_heavy=3
+up_heavy=3
+vlowstep=25
+vhighstep=5
+
+force_iteration=on
+piterations=200
+accuracy=1.0e-3
+#tole_compressibility=1.0e-6
+
+ADV=on
+fixed_timestep=0.0
+finetunedt=0.7
+adv_sub_iterations=2
+adv_gamma=0.5
+monitor_max_T=on
+
+precond=on
+aug_lagr=on
+aug_number=2e+3
+
+remove_angular_momentum=on
+remove_rigid_rotation=off
+
+# Age information
+start_age=75
+reset_startage=on
+
