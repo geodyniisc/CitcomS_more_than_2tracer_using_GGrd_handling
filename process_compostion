@@ -1,0 +1,103 @@
+#!/bin/bash
+
+##### the script plots for compostion when more than 2 tracers are employed.
+
+# Enter the number of tracer flavors-1  and processors n-1
+#flavors=${1-3}
+procs=${2-3}
+#time=${3-1}
+
+flavors=3
+procs=12
+time=0
+
+rm tmp.coord tmp
+
+i=0
+while [[ $i -lt $procs ]]
+do
+gunzip comp_nd.$i.$time.gz
+j=1
+while [[ $j -lt $flavors ]]
+do
+awk ' { if(NR>=2) print $'$j'}' comp_nd.$i.$time > tmp
+cat comp_nd.$i.$time | head -1 > tmp1
+cat tmp1 tmp > comp_nd$j.$i.$time
+gzip comp_nd$j.$i.$time
+  ((j = j + 1))
+done
+rm comp_nd.$i.$time
+ ((i = i + 1))
+done
+rm tmp tmp1
+
+#### for renamin like the 1column compostion ouput
+j=1
+while [[ $j -lt $flavors ]]
+do
+i=0
+while [[ $i -lt $procs ]]
+do
+gunzip comp_nd$j.$i.$time
+mv comp_nd$j.$i.$time comp_nd.$i.$time
+gzip comp_nd.$i.$time
+mv comp_nd.$i.$time.gz comp_nd$j.$i.$time.gz 
+((i = i + 1))
+done
+((j = j + 1))
+done
+
+#exit
+##################################################
+
+j=1
+while [[ $j -lt $flavors ]]
+do
+i=0
+  while [ -s comp_nd$j.$i.$time.gz ];do # loop through cpus
+    if [ ! -s /home/debanjanpal/Desktop/Models/case11/coord/12/coord.$i.gz ];then # coordinate files
+	echo $0: coord file not found 
+	exit
+    fi
+    # convert coordinates into lon lat [deg] depth[km]
+    zcat /home/debanjanpal/Desktop/Models/case11/coord/12//coord.$i.gz | \
+	gawk '{if(NR>1)print($2*f,90-$1*f,(1-$3)*6371)}' f=57.295779513082320 >> tmp.coord
+
+    zcat comp_nd$j.$i.$time.gz | gawk '{if(NR>1)print($1)}'  >> tmp 
+   
+    ((i=i+1))
+
+  done
+    
+
+ # check lengths to make sure we got all 
+if [ `lc tmp.coord` -ne `lc tmp` ];then
+    echo $0: line mismatch
+    exit
+fi
+
+
+
+
+i=0
+gawk ' {print $3 } ' tmp.coord > tdepths.dat
+paste tmp tdepths.dat > c_depth
+gawk ' {if (NR < 66) print $3 } ' tmp.coord > tdepths.dat
+
+for i in {1..65..1}
+do
+no=`sed -n "${i}p"  tdepths.dat`
+echo $0: the current depth is $no
+gawk -v r1=$no '{if ($3==r1)print $1,$2}' tmp.coord > tmp.topo.$i
+awk -v r=$no '{if($2==r) print $1}' c_depth > tmp.comp.$i
+paste tmp.topo.$i tmp.comp.$i > tmp.xyz
+surface tmp.xyz -Gcomp_$i.grd -R0/360/-90/90 -I1 -T0 -Lld -Lud -V
+rm tmp.topo.$i tmp.comp.$i
+mv comp_$i.grd comp.$j.$i.$time.grd
+done
+rm tmp tmp.coord
+((j = j + 1))
+done 
+
+
+
